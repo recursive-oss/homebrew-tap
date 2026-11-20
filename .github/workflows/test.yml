@@ -1,0 +1,34 @@
+name: Test
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Tap this checkout
+        run: |
+          tap=${GITHUB_REPOSITORY/\/homebrew-//}
+          taps="$(brew --repository)/Library/Taps/${GITHUB_REPOSITORY%%/*}"
+          mkdir -p "$taps"
+          ln -s "$GITHUB_WORKSPACE" "$taps/${GITHUB_REPOSITORY#*/}"
+          brew trust "$tap"
+          echo "TAP=$tap" >> "$GITHUB_ENV"
+      - run: brew style "$TAP"
+      - run: brew audit --strict --online --tap "$TAP"
+      - name: Install and test every formula
+        run: |
+          for formula in Formula/*.rb; do
+            name=$(basename "$formula" .rb)
+            brew install "$TAP/$name"
+            brew test "$TAP/$name"
+            brew uninstall "$TAP/$name"
+          done
