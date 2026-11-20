@@ -1,8 +1,8 @@
 class Rec < Formula
   desc "Run Recursive's Flint model locally and launch coding agents"
   homepage "https://github.com/recursive-oss/rec"
-  url "https://github.com/recursive-oss/rec/releases/download/v0.1.1/rec-darwin-arm64"
-  sha256 "76874faf4ba16b1907ebef0d6a92147a1f81b95df92d805ae5b98019df265bed"
+  url "https://github.com/recursive-oss/rec/releases/download/v0.1.2/rec-darwin-arm64"
+  sha256 "cf7971cccbc657b1000ee80ee8de2817fe2b93ffb5f7c170b142adc1de41325b"
   license "Apache-2.0"
 
   livecheck do
